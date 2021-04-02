@@ -1,5 +1,8 @@
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+
+import 'api/api_export.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,7 +33,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  // User speak
+  String userText = "Appuez sur le micro pour parler";
+  bool isListening = false;
+
+  // Initialize
   FlutterTts flutterTts = FlutterTts();
+
 
   @override
   void initState() {
@@ -55,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // print(await flutterTts.getLanguages);
     await speakParams();
     // await flutterTts.speak("Hey Fabio welcome. It's you're friend Voçem");
-    await flutterTts.speak("Bonjour et bienvenue Mr Fabio. Voçem pour te servir.");
+    await flutterTts.speak("Bonjour et bienvenue Mr Fabio. Vocem pour te servir. ");
     await flutterTts.speak("Ceci est le début d'une grande avanture. Nous ferons de grande chose ensemble");
     await flutterTts.speak("J'espère que vous êtes prêts à changer le monde.");
 
@@ -66,6 +75,20 @@ class _MyHomePageState extends State<MyHomePage> {
     print("pause");
     await flutterTts.pause();
   }
+
+  Future toggleRecording() => SpeechApi.toggleRecording(
+      onResult: (text){
+        print("ok");
+        setState((){
+          this.userText = text;
+        });
+      },
+      onListening: (isListening){
+          setState(() {
+            this.isListening = isListening;
+          });
+      }
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -102,10 +125,22 @@ class _MyHomePageState extends State<MyHomePage> {
                   overlayColor: MaterialStateProperty.all<Color>(Colors.red[200]),
                 ),
               ),
+              SizedBox(height: 10,),
+              Text(userText),
             ],
           ),
         ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
+      floatingActionButton: AvatarGlow(
+        animate: isListening,
+        endRadius: 75,
+        glowColor: Theme.of(context).primaryColor,
+        child: FloatingActionButton(
+          child: Icon(isListening ? Icons.mic : Icons.mic_none),
+          onPressed: toggleRecording,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,// railing comma makes auto-formatting nicer for build methods.
     );
   }
 }
