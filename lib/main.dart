@@ -54,8 +54,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
     //voices
     // await flutterTts.setVoice({"name": "Karen", "locale": "en-AU"});
-    await flutterTts.setVoice({"name": "Thomas", "locale": "fr-FR"});
+    //await flutterTts.setVoice({"name": "Thomas", "locale": "fr-FR"});
     // await flutterTts.setVoice({"name": "Daniel", "locale": "en-GB"});
+
+  }
+
+  Future vocemFirstRes() async{
+    await speakParams();
+    await flutterTts.speak("Ludo est très vilain et très bête, très, très bêêeeeeeeeeete");
 
   }
 
@@ -82,6 +88,16 @@ class _MyHomePageState extends State<MyHomePage> {
         setState((){
           this.userText = text;
         });
+        if(this.userText.toLowerCase()=="hey james"){
+          print("You call app");
+            vocemFirstRes();
+        }
+        else if(this.userText.toLowerCase()=="fabrice"){
+          print("You said fabrice");
+        }
+        else if(this.userText.toLowerCase()=="test"){
+          print("You said test");
+        }
       },
       onListening: (isListening){
           setState(() {
